@@ -1,0 +1,5 @@
+$ mkdir flask-boggly-2
+$ cd flask-boggly-2
+$ python3 -m venv venv 
+$ source venv/bin/activate
+$ pip3 install flask flask_debugtoolbar flask-sqlalchemy psycopg2_binary ipython 
