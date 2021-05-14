@@ -1,7 +1,7 @@
 """Blogly application."""
 from flask import Flask, request, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post 
+from models import db, connect_db, User, Post, Tag
 
 app = Flask(__name__)
 # createdb blogly -> need to create database; \c blogly
@@ -16,7 +16,7 @@ debug = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
-# define route for users
+# USERS Routes
 @app.route('/')
 def home_page():
     """Show home page of users"""
@@ -82,7 +82,7 @@ def delete_user(user_id):
 
     return redirect('/users')
 
-# POST Routes 
+# POSTS Routes 
 
 @app.route('/users/<int:user_id>/posts/new') 
 def new_post_form(user_id):
@@ -133,3 +133,48 @@ def delete_post(post_id):
     db.session.commit()
 
     return redirect (f'/users/{post.user_id}')
+
+# TAGS Routes
+@app.route('/tags')
+def list_tags():
+    # instance of user 
+    tags = Tag.query.all()
+    return render_template('tags/index.html', tags=tags)
+
+@app.route('/tags/new') 
+def new_tag_form():
+    return render_template('tags/new.html')
+
+@app.route('/tags/new', methods=["POST"]) 
+def new_tag():
+    """Form Data"""
+    name = request.form['name'].capitalize()
+
+    # instance 
+    new_tag = Tag(name=name)
+
+    db.session.add(new_tag)
+    db.session.commit() 
+
+    return redirect('/tags')
+
+@app.route('/tags/<int:tag_id>') 
+def show_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id) 
+    return render_template('tags/details.html', tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit') 
+def tag_edit_form(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template('tags/edit.html', tag=tag) 
+
+@app.route('/tags/<int:tag_id>/edit', methods=["POST"]) 
+def handle_tag_form(tag_id):
+    tag = Tag.query.get_or_404(tag_id) 
+    tag.name = request.form['name'] 
+
+    db.session.add(tag)
+    db.session.commit() 
+
+    return redirect ('/tags')
+
