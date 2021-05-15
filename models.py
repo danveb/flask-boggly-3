@@ -44,7 +44,7 @@ class Tag(db.Model):
     name = db.Column(db.Text, nullable=False, unique=True)
 
     # through relationship 
-    post_tag = db.relationship('Post', secondary='posts_tags', backref='tags')
+    posts = db.relationship('Post', secondary='posts_tags', backref='tags')
 
 class PostTag(db.Model):
     """PostTag Model"""

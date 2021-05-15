@@ -12,6 +12,12 @@
         <label for="content">Content</label>
         <textarea type="text" id="content" name="content"></textarea>
     </div>
+    {% for tag in tags %}
+    <div>
+        <input type="checkbox" value={{tag.id}} id="tag-{{tag.id}}" name="tag">
+        <label for="tag-{{tag.id}}">{{tag.name}}</label>
+    </div>
+    {% endfor %}
     <button formmethod="GET" formaction="/users/{{user.id}}">Cancel</button>
     <button type="submit">Add</button>
 </form>
