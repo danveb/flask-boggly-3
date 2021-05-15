@@ -178,3 +178,11 @@ def handle_tag_form(tag_id):
 
     return redirect ('/tags')
 
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def delete_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect('/tags') 
